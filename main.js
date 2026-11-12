@@ -1,16 +1,9 @@
 const appList = document.querySelector("#app-list");
 
-function makeLink(label, href) {
-  const link = document.createElement("a");
-  link.href = href;
-  link.textContent = label;
-  return link;
-}
-
 function renderApp(app) {
   if (!app || typeof app.slug !== "string" || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(app.slug)
       || typeof app.name !== "string" || typeof app.description !== "string") {
-    throw new Error("Une entrée de apps.json est incomplète ou invalide.");
+    throw new Error("Une entrée du catalogue apps.js est incomplète ou invalide.");
   }
 
   const basePath = `apps/${encodeURIComponent(app.slug)}/`;
@@ -23,7 +16,16 @@ function renderApp(app) {
   monogram.className = "app-monogram";
   monogram.setAttribute("aria-hidden", "true");
   monogram.textContent = app.name.trim().charAt(0).toUpperCase() || "A";
-  head.append(monogram);
+  if (typeof app.icon === "string" && app.icon.trim()) {
+    const icon = document.createElement("img");
+    icon.className = "app-icon";
+    icon.src = app.icon;
+    icon.alt = "";
+    icon.onerror = () => icon.replaceWith(monogram);
+    head.append(icon);
+  } else {
+    head.append(monogram);
+  }
 
   if (typeof app.platform === "string" && app.platform.trim()) {
     const platform = document.createElement("span");
@@ -36,29 +38,71 @@ function renderApp(app) {
   title.textContent = app.name;
   const description = document.createElement("p");
   description.className = "app-description";
-  description.textContent = app.description;
+  const descriptionFr = document.createElement("span");
+  descriptionFr.dataset.lang = "fr";
+  descriptionFr.hidden = document.documentElement.lang !== "fr";
+  descriptionFr.textContent = app.description;
+  const descriptionEn = document.createElement("span");
+  descriptionEn.dataset.lang = "en";
+  descriptionEn.hidden = document.documentElement.lang !== "en";
+  descriptionEn.textContent = app.descriptionEn || app.description;
+  description.append(descriptionFr, descriptionEn);
   const links = document.createElement("nav");
   links.className = "app-links";
-  links.setAttribute("aria-label", `Documents pour ${app.name}`);
+  links.dataset.labelFr = `Documents pour ${app.name}`;
+  links.dataset.labelEn = `Documents for ${app.name}`;
+  links.setAttribute("aria-label", document.documentElement.lang === "fr"
+    ? links.dataset.labelFr
+    : links.dataset.labelEn);
+  const makeBilingualLink = (fr, en, href) => {
+    const link = document.createElement("a");
+    link.href = href;
+    const frenchLabel = document.createElement("span");
+    frenchLabel.dataset.lang = "fr";
+    frenchLabel.hidden = document.documentElement.lang !== "fr";
+    frenchLabel.textContent = fr;
+    const englishLabel = document.createElement("span");
+    englishLabel.dataset.lang = "en";
+    englishLabel.hidden = document.documentElement.lang !== "en";
+    englishLabel.textContent = en;
+    link.append(frenchLabel, englishLabel);
+    return link;
+  };
   const documentLinks = [
-    makeLink("Présentation", basePath),
-    makeLink("Confidentialité", `${basePath}privacy-policy/`),
-    makeLink("Conditions", `${basePath}terms/`)
+    makeBilingualLink("Présentation", "Overview", basePath),
+    makeBilingualLink("Confidentialité", "Privacy", `${basePath}privacy-policy/`),
+    makeBilingualLink("Conditions", "Terms", `${basePath}terms/`)
   ];
   if (app.accountDeletion === true) {
-    documentLinks.push(makeLink("Supprimer mon compte", `${basePath}delete-account/`));
+    documentLinks.push(makeBilingualLink("Supprimer mon compte", "Delete account", `${basePath}delete-account/`));
   }
   links.append(...documentLinks);
   card.append(head, title, description, links);
+  const playStoreUrl = window.getPlayStoreUrl(app.playStoreUrl);
+  if (playStoreUrl) {
+    const storeLink = document.createElement("a");
+    storeLink.className = "button button-store";
+    storeLink.href = playStoreUrl;
+    storeLink.target = "_blank";
+    storeLink.rel = "noopener noreferrer";
+    const storeLabelFr = document.createElement("span");
+    storeLabelFr.dataset.lang = "fr";
+    storeLabelFr.hidden = document.documentElement.lang !== "fr";
+    storeLabelFr.textContent = "Voir sur Google Play";
+    const storeLabelEn = document.createElement("span");
+    storeLabelEn.dataset.lang = "en";
+    storeLabelEn.hidden = document.documentElement.lang !== "en";
+    storeLabelEn.textContent = "Get it on Google Play";
+    storeLink.append(storeLabelFr, storeLabelEn);
+    card.append(storeLink);
+  }
   return card;
 }
 
-async function loadApps() {
+function loadApps() {
   try {
-    const response = await fetch("apps.json");
-    if (!response.ok) throw new Error(`Impossible de charger apps.json (${response.status}).`);
-    const apps = await response.json();
-    if (!Array.isArray(apps)) throw new Error("apps.json doit contenir une liste d’applications.");
+    const apps = window.APP_CATALOG;
+    if (!Array.isArray(apps)) throw new Error("apps.js doit définir window.APP_CATALOG avec une liste d’applications.");
     if (apps.length === 0) {
       const empty = document.createElement("div");
       empty.className = "empty-card";
@@ -68,15 +112,32 @@ async function loadApps() {
       icon.textContent = "+";
       const text = document.createElement("div");
       const title = document.createElement("strong");
-      title.textContent = "Votre catalogue est prêt.";
+      const titleFr = document.createElement("span");
+      titleFr.dataset.lang = "fr";
+      titleFr.hidden = document.documentElement.lang !== "fr";
+      titleFr.textContent = "Aucune application disponible.";
+      const titleEn = document.createElement("span");
+      titleEn.dataset.lang = "en";
+      titleEn.hidden = document.documentElement.lang !== "en";
+      titleEn.textContent = "No apps available.";
+      title.append(titleFr, titleEn);
       const detail = document.createElement("p");
-      detail.textContent = "Ajoutez une première application dans apps.json ; ses liens vers les documents apparaîtront ici.";
+      const detailFr = document.createElement("span");
+      detailFr.dataset.lang = "fr";
+      detailFr.hidden = document.documentElement.lang !== "fr";
+      detailFr.textContent = "Revenez bientôt pour découvrir nos applications.";
+      const detailEn = document.createElement("span");
+      detailEn.dataset.lang = "en";
+      detailEn.hidden = document.documentElement.lang !== "en";
+      detailEn.textContent = "Check back soon to discover our apps.";
+      detail.append(detailFr, detailEn);
       text.append(title, detail);
       empty.append(icon, text);
       appList.replaceChildren(empty);
       return;
     }
     appList.replaceChildren(...apps.map(renderApp));
+    window.rewriteLocalDirectoryLinks(appList);
   } catch (error) {
     const message = document.createElement("p");
     message.className = "error-card";
