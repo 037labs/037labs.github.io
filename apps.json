@@ -1,0 +1,15 @@
+[
+  {
+    "slug": "carryall",
+    "name": "Carryall",
+    "description": "Application mobile Android.",
+    "platform": "Android",
+    "accountDeletion": true
+  },
+  {
+    "slug": "pitchy",
+    "name": "Pitchy",
+    "description": "Application mobile Android.",
+    "platform": "Android"
+  }
+]

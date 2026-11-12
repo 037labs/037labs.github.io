@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f4">
+  <meta name="description" content="Retrouvez les informations légales et les ressources des applications mobiles de 037 Labs.">
+  <title>037 Labs — applications & informations</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Accueil 037 Labs">
+      <span class="brand-mark" aria-hidden="true">037</span>
+      <span class="brand-name">037 Labs</span>
+    </a>
+    <a class="top-link" href="#applications">Les applications <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-line"></span> UN ESPACE, TOUTES LES INFOS</p>
+        <h1>Des applications<br>bien <span class="serif-accent">accompagnées.</span></h1>
+        <p class="hero-description">Les informations utiles, réunies au même endroit. Retrouvez ici les politiques de confidentialité, conditions d’utilisation et ressources de chaque application.</p>
+        <a class="button button-dark" href="#applications">Explorer les applications <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="art-orbit orbit-one"></div>
+        <div class="art-orbit orbit-two"></div>
+        <div class="art-sun"></div>
+        <div class="art-card">
+          <div class="art-card-top"><span class="art-window-dots">● ● ●</span><span>ESPACE APPS</span></div>
+          <div class="art-symbol">✳</div>
+          <div class="art-card-title">Tout est<br>à sa place.</div>
+          <div class="art-card-foot"><span>Simplement.</span><span>↗</span></div>
+        </div>
+        <span class="art-spark spark-one">✳</span>
+        <span class="art-spark spark-two">✳</span>
+        <span class="art-caption">CLAIR · ACCESSIBLE · À JOUR</span>
+      </div>
+    </section>
+
+    <section class="apps-section" id="applications">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow"><span class="eyebrow-line"></span> LE CATALOGUE</p>
+          <h2>Les applications<span class="heading-period">.</span></h2>
+        </div>
+        <p class="section-note">Chaque application a son espace et ses liens directs.</p>
+      </div>
+      <div id="app-list" class="app-list" aria-live="polite">
+        <div class="loading-card">Le catalogue arrive<span class="loading-dots">…</span></div>
+      </div>
+    </section>
+
+    <section class="resources-section" aria-labelledby="resources-title">
+      <div class="resource-icon" aria-hidden="true">↗</div>
+      <div class="resource-copy">
+        <p class="eyebrow">RESSOURCE ÉDITEUR</p>
+        <h2 id="resources-title">Fichier publicitaire</h2>
+        <p>La déclaration <code>app-ads.txt</code> de l’éditeur, publiée à la racine de ce site.</p>
+      </div>
+      <a class="text-link" href="app-ads.txt">Consulter app-ads.txt <span aria-hidden="true">↗</span></a>
+    </section>
+
+    <section class="how-section" aria-labelledby="how-title">
+      <div>
+        <p class="eyebrow"><span class="eyebrow-line"></span> CÔTÉ ÉDITEUR</p>
+        <h2 id="how-title">Une nouvelle app ?<br><span class="serif-accent">Quelques minutes suffisent.</span></h2>
+      </div>
+      <div class="how-steps">
+        <div class="how-step"><span>01</span><p>Dupliquez le dossier modèle pour créer les pages de l’application.</p></div>
+        <div class="how-step"><span>02</span><p>Ajoutez son nom et sa description dans <code>apps.json</code>.</p></div>
+        <div class="how-step"><span>03</span><p>Publiez : les liens apparaîtront automatiquement dans le catalogue.</p></div>
+        <a class="text-link setup-link" href="README.md">Voir le guide de mise à jour <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <a class="brand footer-brand" href="./"><span class="brand-mark" aria-hidden="true">037</span><span class="brand-name">037 Labs</span></a>
+    <p>Les informations officielles des applications 037 Labs.</p>
+    <span class="footer-year">© <span id="year"></span></span>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,4 @@
+# 037 Labs — ajoutez ici les déclarations officielles de vos partenaires publicitaires.
+# app-ads.txt est un fichier éditeur unique, commun à Carryall, Pitchy et aux futures applications.
+# Remplacez ces commentaires par les lignes exactes fournies par chaque partenaire avant d'activer la publicité.
+# Publiez-le à la racine du domaine du site : https://votre-domaine/app-ads.txt
