@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <meta name="theme-color" content="#044352">
+    <title>Invitation Carryall</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: system-ui, sans-serif;
+        background: #f2f6f4;
+        color: #203842;
+      }
+
+      body {
+        display: grid;
+        min-height: 100vh;
+        margin: 0;
+        place-items: center;
+        padding: 24px;
+        box-sizing: border-box;
+      }
+
+      main {
+        width: min(100%, 420px);
+        padding: 32px;
+        border-radius: 28px;
+        background: white;
+        box-shadow: 0 16px 48px #2038421a;
+        text-align: center;
+      }
+
+      .icon {
+        display: grid;
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 16px;
+        place-items: center;
+        border-radius: 20px;
+        background: #dcebe6;
+        color: #044352;
+        font-size: 32px;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 24px;
+      }
+
+      p {
+        margin: 0 0 20px;
+        line-height: 1.5;
+      }
+
+      a {
+        display: block;
+        margin-top: 12px;
+        padding: 14px 18px;
+        border-radius: 14px;
+        color: white;
+        background: #044352;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      a.secondary {
+        color: #044352;
+        background: #e7efec;
+      }
+
+      [hidden] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="icon" aria-hidden="true">✈</div>
+      <h1>Invitation Carryall</h1>
+      <p id="message">Ouverture du voyage dans Carryall…</p>
+      <a id="open-app" href="#">Ouvrir dans Carryall</a>
+      <a id="install-app" class="secondary" href="#">Installer sur Google Play</a>
+      <p id="invalid-code" hidden>Ce lien d’invitation est invalide.</p>
+    </main>
+    <script>
+      const code = new URLSearchParams(window.location.search)
+        .get("code")
+        ?.trim()
+        .toUpperCase();
+      const validCode = /^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{8}$/.test(code ?? "");
+      const message = document.getElementById("message");
+      const openApp = document.getElementById("open-app");
+      const installApp = document.getElementById("install-app");
+      const invalidCode = document.getElementById("invalid-code");
+
+      if (!validCode) {
+        message.hidden = true;
+        openApp.hidden = true;
+        installApp.hidden = true;
+        invalidCode.hidden = false;
+      } else {
+        const storeUrl = new URL("https://play.google.com/store/apps/details");
+        storeUrl.searchParams.set("id", "com.labs037.carryall");
+        storeUrl.searchParams.set("referrer", `invite_code=${code}`);
+        const intentUrl =
+          `intent://shared-invite/${code}` +
+          "#Intent;scheme=com.labs037.carryall;" +
+          "package=com.labs037.carryall;" +
+          `S.browser_fallback_url=${encodeURIComponent(storeUrl.toString())};end`;
+
+        openApp.href = intentUrl;
+        installApp.href = storeUrl.toString();
+        window.location.replace(intentUrl);
+      }
+    </script>
+  </body>
+</html>
